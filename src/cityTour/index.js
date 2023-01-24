@@ -1,33 +1,66 @@
 import { useState } from 'react';
-import { tourData } from './TourData';
+import { tourData } from './Data/TourData';
+import Logo from "./cityTour.jpeg";
+import './cityTour.css';
+
 const CityTour = () => {
-    const [toggle, setToggle] = useState(false);
-    const clickHandler = () => {
-        setToggle(!toggle);
+    const [showInfo, setShowInfo] = useState(false);
+    const [data,setData]=useState(tourData)
+    const showInfoHandler = () => {
+        setShowInfo(!showInfo);
     }
+    const removeTour = id => {
+        const sortedTours = tourData.filter(tour => tour.id !== id);
+        setData(sortedTours);
+      }
     return (
         <div>
 
-            <div style={{ display: "flex", justifyContent: 'space-between', margin: '30px', backgroundColor: 'skyblue', padding: '10px 100px' }}>
-                <img src='cityTour.jpg' height='100' width='100' />
-                <div>Home</div>
-                <div>About</div>
-                <div>Tour</div>
+            <div>
+
+                <nav className="navbar">
+                    <img src={Logo} alt="logo" width="100px" height="100px" />
+                    <ul className="nav-links">
+                        <li>
+                            <a href="/" className="nav-link">
+                                home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/" className="nav-link">
+                                about
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/" className="nav-link active">
+                                tours
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <div style={{ textAlign: "center", width: "300px", margin: "20px", display: "flex" }}>
-                {tourData.map((tour) => {
+            <div className="tourlist">
+                {data.map((tour) => {
                     return (
-                        <div key={tour.id} style={{ margin: "10px 20px", backgroundColor: "lightcyan" ,borderRadius:"10px"}}>
-                            <img src={tour.img} alt="img" width="300" height="300" />
-                            <p style={{ color: "green", fontWeight: "bold", fontSize: "20px" }}>{tour.city.toUpperCase()}</p>
-                            <p style={{ fontWeight: "bold" }}>{tour.name.charAt(0).toUpperCase() + tour.name.slice(1)}</p>
-                            <div style={{ display: "inline-flex" }}>
-                                <p>Info:</p>
-                                &nbsp;
-                                <p onClick={clickHandler} style={{ cursor: "pointer", border: "transparent", height: "20px" }}><span style={{color:"blue"}}>Click Here</span></p>
+                        <article className="tour">
+                            <div className="img-container">
+                                <img src={tour.img} alt="tour pic" />
+                                <span className="close-btn" onClick={() => removeTour(tour.id)}>
+                                    <i className="fas fa-window-close" />
+                                </span>
                             </div>
-                            {toggle && <p>{tour.info}</p>}
-                        </div>
+                            <div className="tour-info">
+                                <h3>{tour.city}</h3>
+                                <h4>{tour.name}</h4>
+                                <h5>
+                                    info
+                                    <span onClick={showInfoHandler}>
+                                        <i className="fas fa-caret-square-down" />
+                                    </span>
+                                </h5>
+                                {showInfo && <p>{tour.info}</p>}
+                            </div>
+                        </article>
                     )
                 })}
             </div>
